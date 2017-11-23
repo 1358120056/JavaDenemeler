@@ -1,0 +1,6 @@
+0 - Yolun başındasın
+1 - Bir yolun başındasın
+2 - Bir tepenin başındasın
+3 - Bir tepenin başındasın
+4 - Bir tepenin başındasın
+5 - Balta girmemiş bir ormandasın

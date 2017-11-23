@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="PackageKavram_jar">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../PackageKavramı/out/artifacts/PackageKavram_jar" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/../PackageKavramı/out/artifacts/PackageKavram_jar" recursive="false" />
+  </library>
+</component>

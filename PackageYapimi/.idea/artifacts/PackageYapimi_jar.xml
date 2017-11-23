@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PackageYapimi:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PackageYapimi_jar</output-path>
+    <root id="archive" name="PackageYapimi.jar">
+      <element id="module-output" name="PackageYapimi" />
+    </root>
+  </artifact>
+</component>

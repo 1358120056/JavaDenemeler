@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PackageYapimi">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../PackageYapimi/out/artifacts/PackageYapimi_jar/PackageYapimi.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
