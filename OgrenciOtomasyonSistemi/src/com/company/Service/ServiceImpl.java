@@ -25,10 +25,10 @@ public class ServiceImpl implements Service {
         try {
             PreparedStatement statement = connect.prepareStatement("INSERT INTO STUDENT (STUDENT_ID,NAME,SURNAME,PASSWORD)" +
                     " VALUES(?,?,?,?)");
-            statement.setInt(0,student.getStudentID());
-            statement.setString(1,student.getName());
-            statement.setString(2,student.getSurname());
-            statement.setString(3,student.getPassword());
+            statement.setInt(1,student.getStudentID());
+            statement.setString(2,student.getName());
+            statement.setString(3,student.getSurname());
+            statement.setString(4,student.getPassword());
             statement.execute();
             connect.close();
         } catch (SQLException e) {
@@ -37,10 +37,23 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public void ogreniSil(Student student) {
+    public void ogreniSil(int studentID) {
 
+        Connection connect=openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("DELETE FROM STUDENT " +
+                    "WHERE  STUDENT_ID  =  (?) ");
+            statement.setInt(1,studentID);
+            statement.execute();
+            statement = connect.prepareStatement("DELETE FROM ALINAN_DERS " +
+                    "WHERE  STUDENT_ID  =  (?) ");
+            statement.setInt(1,studentID);
+            statement.execute();
+            connect.close();
+        } catch (SQLException e) {
+            System.out.println(studentID +" nolu öğrenci silinemedi.");
+        }
     }
-
     @Override
     public void ogrenciGuncelleme(Student student) {
 
@@ -48,7 +61,6 @@ public class ServiceImpl implements Service {
 
     private Connection openSqlConnection() {
         Connection connect;
-        Statement statement;
         try {
             Class.forName("com.mysql.jdbc.Driver");
             connect = DriverManager

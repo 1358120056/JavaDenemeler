@@ -15,5 +15,7 @@ public class Main {
         student.setPassword("123");
         service.ogrenciKaydet(student);
 
+        service.ogreniSil(15);
+
     }
 }
