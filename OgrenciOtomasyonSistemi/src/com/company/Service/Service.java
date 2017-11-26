@@ -9,14 +9,27 @@ import java.util.List;
 public interface Service {
 
     List<Lesson> getAllLesons();
-    void dersSec(int studentID , int ID);
-    List<Lesson> notlariGor(int studentID);
+
+
     void ogrenciKaydet(Student student);
     void ogreniSil(int studentID);
     void ogrenciGuncelleme(Student student);
+
     void ogretmenKaydet(Teacher teacher);
-    void ogremenSil(int ogretmenId);
+    void ogretmenSil(int ogretmenId);
     void ogretmenGuncelleme(Teacher teacher);
+
+    void dersSec(int studentID , int ID);
+
+    void ogretmenNotGirisi(int teacherID, Lesson ders);
+    void ogretmenNotSorgulama(int studentID);
+
+    void ogretmenKendiniGuncelleme(Teacher teacher);
+
+    List<Lesson> notlariGor(int studentID);
+
+    boolean sorgulaOgrenci(int id, String sifre);
+    boolean sorgulaOgretmen(int id, String sifre);
 
 
 }
