@@ -1,10 +1,12 @@
 package com.company.Service;
 
 import com.company.model.Lesson;
+import com.company.model.Notes;
 import com.company.model.Student;
 import com.company.model.Teacher;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceImpl implements Service {
@@ -19,68 +21,6 @@ public class ServiceImpl implements Service {
         } catch (Exception e) {
             System.out.println("Veritabanına bağlanılamadı.");
         }
-        return null;
-    }
-
-    @Override
-    public void ogrenciKaydet(Student student) {
-        Connection connect = openSqlConnection();
-        try {
-            PreparedStatement statement = connect.prepareStatement("INSERT INTO STUDENT (STUDENT_ID,NAME,SURNAME,PASSWORD)" +
-                    " VALUES(?,?,?,?)");
-            statement.setInt(1, student.getStudentID());
-            statement.setString(2, student.getName());
-            statement.setString(3, student.getSurname());
-            statement.setString(4, student.getPassword());
-            statement.execute();
-            connect.close();
-        } catch (SQLException e) {
-            System.out.println("Öğrenci kayıt edilemedi");
-        }
-    }
-
-    @Override
-    public void ogreniSil(int studentID) {
-
-        Connection connect = openSqlConnection();
-        try {
-            PreparedStatement statement = connect.prepareStatement("DELETE FROM STUDENT " +
-                    "WHERE  STUDENT_ID  =  (?) ");
-            statement.setInt(1, studentID);
-            statement.execute();
-            statement = connect.prepareStatement("DELETE FROM ALINAN_DERS " +
-                    "WHERE  STUDENT_ID  =  (?) ");
-            statement.setInt(1, studentID);
-            statement.execute();
-            connect.close();
-        } catch (SQLException e) {
-            System.out.println(studentID + " nolu öğrenci silinemedi.");
-        }
-    }
-
-
-    @Override
-    public void dersSec(int studentID, int ID) {
-
-    }
-
-    @Override
-    public void ogretmenNotGirisi(int teacherID, Lesson ders) {
-
-    }
-
-    @Override
-    public void ogretmenNotSorgulama(int studentID) {
-
-    }
-
-    @Override
-    public void ogretmenKendiniGuncelleme(Teacher teacher) {
-
-    }
-
-    @Override
-    public List<Lesson> notlariGor(int studentID) {
         return null;
     }
 
@@ -122,14 +62,39 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public List<Lesson> getAllLesons() {
-        return null;
+    public void ogrenciKaydet(Student student) {
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("INSERT INTO STUDENT (STUDENT_ID,NAME,SURNAME,PASSWORD)" +
+                    " VALUES(?,?,?,?)");
+            statement.setInt(1, student.getStudentID());
+            statement.setString(2, student.getName());
+            statement.setString(3, student.getSurname());
+            statement.setString(4, student.getPassword());
+            statement.execute();
+            connect.close();
+        } catch (SQLException e) {
+            System.out.println("Öğrenci kayıt edilemedi");
+        }
     }
 
-
     @Override
-    public void ogrenciGuncelleme(Student student) {
+    public void ogrenciSil(int studentID) {
 
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("DELETE FROM STUDENT " +
+                    "WHERE  STUDENT_ID  =  (?) ");
+            statement.setInt(1, studentID);
+            statement.execute();
+            statement = connect.prepareStatement("DELETE FROM ALINAN_DERS " +
+                    "WHERE  STUDENT_ID  =  (?) ");
+            statement.setInt(1, studentID);
+            statement.execute();
+            connect.close();
+        } catch (SQLException e) {
+            System.out.println(studentID + " nolu öğrenci silinemedi.");
+        }
     }
 
     @Override
@@ -172,8 +137,150 @@ public class ServiceImpl implements Service {
     }
 
     @Override
+    public List<Notes> ogretmenNotSorgulama(int studentID, int lessonID) {
+
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("SELECT *" +
+                    " FROM NOTES " +
+                    "WHERE STUDENT_ID = ? AND LESSON_ID = ?");
+            statement.setInt(1, studentID);
+            statement.setInt(2, lessonID);
+
+            ResultSet set = statement.executeQuery();
+            List<Notes> not_Listesi = new ArrayList<>();
+            while(set.next()){
+                Notes not = new Notes();
+                not.setLessonID(set.getInt("LESSON_ID"));
+                not.setStudentID(set.getInt("STUDENT_ID"));
+                not.setNote1(set.getInt("NOTE_1"));
+                not.setNote2(set.getInt("NOTE_2"));
+
+                not_Listesi.add(not);
+            }
+            connect.close();
+            return not_Listesi;
+
+        } catch (SQLException e) {
+            System.out.println("öğretmen Not Sorgulama hatası.");
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Notes> notlariGor(int studentID) {
+
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("SELECT *" +
+                    " FROM NOTES,LESSON " +
+                    "WHERE NOTES.LESSON_ID = LESSON.LESSON_ID AND NOTES.STUDENT_ID = ?");
+            statement.setInt(1, studentID);
+            ResultSet set = statement.executeQuery();
+
+            List<Notes> not_Listesi = new ArrayList<>();
+            while(set.next()){
+                Notes not = new Notes();
+                not.setLessonID(set.getInt("LESSON_ID"));
+                not.setStudentID(set.getInt("STUDENT_ID"));
+                not.setNote1(set.getInt("NOTE_1"));
+                not.setNote2(set.getInt("NOTE_2"));
+                not.setLessonName(set.getString("NAME"));
+
+                not_Listesi.add(not);
+            }
+            connect.close();
+            return not_Listesi;
+
+        } catch (SQLException e) {
+            System.out.println("öğrenci kendi Not Sorgulama hatası.");
+        }
+        return new ArrayList<>();
+
+    }
+
+    @Override
+    public void ogretmenNotGirisi(int teacherID, Notes notes) {
+
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("INSERT INTO NOTES (LESSON_ID,STUDENT_ID,NOTE_1,NOTE_2) VALUES(?,?,?,?)");
+
+            statement.setInt(1, notes.getLessonID());
+            statement.setInt(2, notes.getStudentID());
+            statement.setInt(3, notes.getNote1());
+            statement.setInt(4, notes.getNote2());
+
+            statement.execute();
+            connect.close();
+        } catch (SQLException e) {
+            System.out.println("ogretmen not girisi başarısız.");
+        }
+
+    }
+
+    @Override
+    public List<Lesson> getAllLesons() {
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("SELECT *" +
+                    " FROM LESSON " );
+
+            ResultSet set = statement.executeQuery();
+            List<Lesson> ders_Listesi = new ArrayList<>();
+            while(set.next()){
+                Lesson lesson = new Notes();
+                lesson.setLessonID(set.getInt("LESSON_ID"));
+                lesson.setLessonName(set.getString("NAME"));
+                lesson.setDersi_veren_ID(set.getInt("TEACHER_ID"));
+
+                ders_Listesi.add(lesson);
+            }
+            connect.close();
+            return ders_Listesi;
+
+        } catch (SQLException e) {
+            System.out.println("Ders sorgulama hatası.");
+        }
+        return new ArrayList<>();
+
+    }
+
+    @Override
+    public void ogretmenKendiniGuncelleme(Teacher teacher) {
+        Connection connect = openSqlConnection();
+        try {
+            PreparedStatement statement = connect.prepareStatement("Update TEACHER SET TEACHER_ID=?, NAME=?,SURNAME=?,PASSWORD=? WHERE TEACHER_ID=?" );
+
+            statement.setInt(1, teacher.getTeacherID());
+            statement.setString(2, teacher.getName());
+            statement.setString(3, teacher.getSurname());
+            statement.setString(4, teacher.getPassword());
+            statement.setInt(5, teacher.getTeacherID());
+
+            statement.execute();
+            connect.close();
+        } catch (SQLException e) {
+            System.out.println("Öğretmen güncelleme hatası.");
+        }
+    }
+
+
+
+    @Override
+    public void dersSec(int studentID, int ID) {
+
+    }
+
+    @Override
+    public void ogrenciGuncelleme(Student student) {
+
+    }
+
+    @Override
     public void ogretmenGuncelleme(Teacher teacher) {
 
     }
 
 }
+

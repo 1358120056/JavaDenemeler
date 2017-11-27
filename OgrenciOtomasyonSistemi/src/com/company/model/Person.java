@@ -9,7 +9,7 @@ public class Person {
     private String name;
     private String surname;
     private String password;
-    private Date birthday;
+
 
     public String getName() {
         return name;
@@ -27,13 +27,6 @@ public class Person {
         this.surname = surname;
     }
 
-    public Date getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
-    }
 
     public String getPassword() {
         return password;

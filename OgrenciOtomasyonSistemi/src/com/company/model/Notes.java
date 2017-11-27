@@ -1,13 +1,15 @@
 package com.company.model;
 
-public class Notes {
+public class Notes extends Lesson {
 
     private int lessonID;
     private int studentID;
     private int note1;
     private int note2;
 
-    public int getLessonID() {
+
+
+    public int getLessonID(){
         return lessonID;
     }
 

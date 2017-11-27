@@ -8,16 +8,14 @@ public class Lesson {
 
     private String lessonName ;
     private int lessonID;
-    private int midtermNote;
-    private int finalNote;
-    private int dersi_veren_ID;
+    private int teacherID;
 
     public int getDersi_veren_ID() {
-        return dersi_veren_ID;
+        return teacherID;
     }
 
-    public void setDersi_veren_ID(int dersi_veren_ID) {
-        this.dersi_veren_ID = dersi_veren_ID;
+    public void setDersi_veren_ID(int teacherID) {
+        this.teacherID = teacherID;
     }
 
     public int getLessonID() {
@@ -36,19 +34,4 @@ public class Lesson {
         this.lessonName = lessonName;
     }
 
-    public int getMidtermNote() {
-        return midtermNote;
-    }
-
-    public void setMidtermNote(int midtermNote) {
-        this.midtermNote = midtermNote;
-    }
-
-    public int getFinalNote() {
-        return finalNote;
-    }
-
-    public void setFinalNote(int finalNote) {
-        this.finalNote = finalNote;
-    }
 }

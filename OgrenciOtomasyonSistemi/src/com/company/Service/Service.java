@@ -1,6 +1,7 @@
 package com.company.Service;
 
 import com.company.model.Lesson;
+import com.company.model.Notes;
 import com.company.model.Student;
 import com.company.model.Teacher;
 
@@ -12,7 +13,7 @@ public interface Service {
 
 
     void ogrenciKaydet(Student student);
-    void ogreniSil(int studentID);
+    void ogrenciSil(int studentID);
     void ogrenciGuncelleme(Student student);
 
     void ogretmenKaydet(Teacher teacher);
@@ -21,12 +22,12 @@ public interface Service {
 
     void dersSec(int studentID , int ID);
 
-    void ogretmenNotGirisi(int teacherID, Lesson ders);
-    void ogretmenNotSorgulama(int studentID);
+    void ogretmenNotGirisi(int teacherID, Notes notes);
+    List<Notes> ogretmenNotSorgulama(int studentID, int lessonID);
 
     void ogretmenKendiniGuncelleme(Teacher teacher);
 
-    List<Lesson> notlariGor(int studentID);
+    List<Notes> notlariGor(int studentID);
 
     boolean sorgulaOgrenci(int id, String sifre);
     boolean sorgulaOgretmen(int id, String sifre);
