@@ -6,8 +6,11 @@ import com.company.model.Lesson;
 import com.company.model.Notes;
 import com.company.model.Student;
 import com.company.model.Teacher;
+import com.sun.tools.internal.ws.wsdl.document.soap.SOAPUse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -16,7 +19,8 @@ public class Main {
     static Scanner tara = new Scanner(System.in);
 
     public static void main(String[] args) {
-        //menuGoster();
+
+        menuGoster();
 
         Service service = new ServiceImpl();
         Student student = new Student();
@@ -43,6 +47,7 @@ public class Main {
         }
         */
 
+        /*
         teacher.setTeacherID(5);
         teacher.setName("recep");
         teacher.setSurname("tayyip");
@@ -50,7 +55,7 @@ public class Main {
 
         service.ogretmenKendiniGuncelleme(teacher);
 
-
+        */
 
 
         //List<Notes> liste=service.ogretmenNotSorgulama(12,1);
@@ -71,9 +76,9 @@ public class Main {
     private static void menuGoster() {
 
         System.out.println("Yapmak istediğiniz işlemi seçiniz:\n " +
-                "1- Öğretim Üyesi İşlemleri\n" +
-                " 2- Öğrenci İşlemleri\n " +
-                "3-Çıkış");
+                "1- Öğretim Üyesi İşlemleri\n " +
+                "2- Öğrenci İşlemleri\n " +
+                "3- Çıkış");
 
         boolean cikis = false;
         while (!cikis) {
@@ -102,24 +107,87 @@ public class Main {
         }
     }
 
+    private static void ogrenciMenusu(int ogrenciID) {
+        boolean cikis = false;
+        while (!cikis) {
+            System.out.println("*****Öğrenci Menüsü*****");
+            System.out.println("Yapmak istediğiniz işlemi seçin.");
+            System.out.println("1-Ders seçimi");
+            System.out.println("2-Notları Görmek");
+            System.out.println("3-Çıkış");
+            int secim = tara.nextInt();
+            switch (secim) {
+
+                case 1:
+                    dersSecimi(ogrenciID);
+                    break;
+
+                case 2:
+                    System.out.println("Notlarınız:");
+                    List<Notes> notes = service.notlariGor(ogrenciID);
+                    for (Notes note : notes) {
+                        System.out.println("Ders Adi: " + note.getLessonName());
+                        System.out.println("Vize " + note.getNote1());
+                        System.out.println("Final " + note.getNote2());
+                        System.out.println("***************************");
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Çıkış yapılıyor...");
+                    cikis = true;
+                    break;
+
+                default:
+                    System.out.println("Lütfen 1-3 arası değer giriniz.");
+                    break;
+            }
+        }
+    }
+    private static void dersSecimi(int ogrenciID) {
+
+        System.out.println("Ders Seçimi Menüsü");
+        List<Lesson> tumDersler = service.getAllLesons(ogrenciID);
+        for (Lesson l : tumDersler) {
+            System.out.println("ID:" + l.getLessonID() + " - " + l.getLessonName());
+        }
+        if (tumDersler.size() > 0) {
+            System.out.println("Seçmek istediğiniz dersin ıd'sini giriniz.");
+            int secilenDers = tara.nextInt();
+            boolean aa=false;
+            for(Lesson l : tumDersler){
+                if(l.getLessonID() ==secilenDers){
+                    aa=true;
+                }
+            }
+            if(aa) {
+                service.dersSec(ogrenciID, secilenDers);
+                System.out.println("Eklendi.");
+            }
+            else{
+                System.out.println("Yanlış id girdiniz.");
+                dersSecimi(ogrenciID);
+            }
+        }
+        else {
+            System.out.println("Tüm dersler zaten seçili");
+        }
+    }
     private static void ogrenciGiris() {
-
         boolean giris = false;
-
-        while (!giris){
-
+        while (!giris) {
             System.out.println("ID'nizi giriniz.");
             int ogrenciID = tara.nextInt();
             System.out.println("şifrenizi giriniz.");
             String sifre = tara.next();
 
             boolean a = service.sorgulaOgrenci(ogrenciID, sifre);
-
-            if(a==true){
+            Map<String, String> gelenOgrenciBilgileri = service.girenOgrenciKim(ogrenciID);
+            if (a == true) {
                 giris = true;
-                System.out.println("Öğrenci girişi başarılı");
-            }
-            else {
+                System.out.println("Hogeldiniz " + gelenOgrenciBilgileri.get("ad"));
+                ogrenciMenusu(ogrenciID);
+            } else {
                 System.out.println("hatalı giriş. Tekrar deneyiniz...");
             }
         }
@@ -128,21 +196,24 @@ public class Main {
 
         boolean giris = false;
 
-        while (!giris){
+        while (!giris) {
 
             System.out.println("ID'nizi giriniz.");
             int ogretmenID = tara.nextInt();
             System.out.println("şifrenizi giriniz.");
             String sifre = tara.next();
 
-            boolean a =service.sorgulaOgretmen(ogretmenID, sifre);
-
-            if(a==true){
-                System.out.println("Öğretmen girişi başarılı");
-            }
-            else {
-                System.out.println("hatalı giriş.Tekrar deneyiniz...");
+            boolean a = service.sorgulaOgretmen(ogretmenID, sifre);
+            if (a == true) {
+                Map<String, String> gelenHocaBilgileri = service.girenHocaKim(ogretmenID);
+                giris = true;
+                System.out.println("Hogeldiniz " + gelenHocaBilgileri.get("ad"));
+                System.out.println();
+            } else {
+                System.out.println("Hatalı giriş.Tekrar deneyiniz...");
             }
         }
     }
+
+
 }
